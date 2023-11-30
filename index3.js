@@ -8,6 +8,12 @@ class Customer {
   /**
    * Конструктор для класу Customer. Приймає email - Електронна адреса клієнта.
    */
+  constructor(){
+
+  }
+  sendEmail(message) {
+    console.log(message);
+  }
   /**
    * Метод відправки повідомлення клієнту по електронній пошті.Приймає message - повідомлення,та виводить в консоль ${this.email} ${message}.
    */
@@ -17,6 +23,9 @@ class Customer {
  * Клас Product представляє продукт, який можна створювати.
  */
 class Product {
+  constructor(name) {
+    this.name = name;
+  }
   /**
    * Конструктор для класу Product.Приймає name - Назва продукту.
    */
@@ -27,6 +36,30 @@ class Product {
  * Магазин має назву і список підписників, які отримують повідомлення про нові продукти.
  */
 class Store {
+  constructor(name) {
+    this.name = name;
+    this.customers = [];
+  }
+
+  subscribe(customer) {
+    this.customers.push(customer);
+  }
+
+  unsubscribe(customer) {
+    this.customers = this.customers.filter(c => c !== customer);
+  }
+
+  createProduct(name) {
+    const newProduct = new Product(name);
+    this.sendNotify(newProduct);
+  }
+
+  sendNotify(product) {
+    this.customers.forEach(customer => {
+      customer.sendEmail(`Новий продукт "${product.name}" в магазині ${this.name}!`);
+    });
+  }
+}
   /**
    * Конструктор для класу Store.Приймає name - Назва магазину, та створює пустий масив customers
    */
@@ -48,23 +81,22 @@ class Store {
    */
   // За допомогою forEach перебираємо масив customers
   // Для кожного елементу масиву викликаємо метод sendEmail з рядком `Новий продукт "${product.name}" в магазині ${this.name}!`
-}
+
 
 console.log("Завдання 3 ====================================");
 // Після виконання розкоментуйте код нижче
+ const store = new Store("IT Supermarket");
 
-// const store = new Store("IT Supermarket");
+ const customer1 = new Customer("john@example.com");
+ const customer2 = new Customer("jane@example.com");
+ const customer3 = new Customer("alice@example.com");
 
-// const customer1 = new Customer("john@example.com");
-// const customer2 = new Customer("jane@example.com");
-// const customer3 = new Customer("alice@example.com");
+ store.subscribe(customer1);
+ store.subscribe(customer2);
+ store.subscribe(customer3);
 
-// store.subscribe(customer1);
-// store.subscribe(customer2);
-// store.subscribe(customer3);
+ store.createProduct("Новий ноутбук");
 
-// store.createProduct("Новий ноутбук");
+ store.unsubscribe(customer1);
 
-// store.unsubscribe(customer1);
-
-// store.createProduct("Бездротові навушники");
+store.createProduct("Бездротові навушники");
